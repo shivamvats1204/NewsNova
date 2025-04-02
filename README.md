@@ -37,11 +37,9 @@ newsnova/
 │   ├── database/         # Database models and operations
 │   ├── nlp/             # Natural Language Processing components
 │   ├── publisher/       # Publishing and scheduling
-│   ├── scraper/        # Web scraping components
-│   └── utils/          # Utility functions
+│   └── scraper/        # Web scraping components
 ├── config/             # Configuration files
 ├── logs/              # Application logs
-├── tests/             # Test files
 ├── main.py            # Main application entry point
 ├── requirements.txt   # Python dependencies
 └── .env              # Environment variables
