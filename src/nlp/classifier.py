@@ -8,7 +8,6 @@ from config.logging_config import logger
 class TopicClassifier:
     def __init__(self):
         try:
-            # Initialize the zero-shot classification pipeline
             self.classifier = pipeline(
                 "zero-shot-classification",
                 model=CLASSIFICATION_MODEL,
@@ -19,12 +18,10 @@ class TopicClassifier:
             raise
     
     def classify(self, text: str, top_k: int = 2) -> List[Dict[str, Any]]:
-        """Classify the text into topics."""
         try:
             if not text:
                 return []
             
-            # Perform classification
             results = self.classifier(
                 text,
                 candidate_labels=CATEGORIES,
@@ -32,7 +29,6 @@ class TopicClassifier:
                 top_k=top_k
             )
             
-            # Format results
             classifications = []
             for label, score in zip(results['labels'], results['scores']):
                 classifications.append({
@@ -46,7 +42,6 @@ class TopicClassifier:
             return []
     
     def get_primary_category(self, text: str) -> str:
-        """Get the primary category for the text."""
         try:
             classifications = self.classify(text, top_k=1)
             if classifications:
@@ -57,7 +52,6 @@ class TopicClassifier:
             return 'general'
     
     def get_categories_with_confidence(self, text: str, confidence_threshold: float = 0.3) -> List[Dict[str, Any]]:
-        """Get all categories with confidence above the threshold."""
         try:
             classifications = self.classify(text, top_k=len(CATEGORIES))
             return [
@@ -69,5 +63,4 @@ class TopicClassifier:
             return []
     
     def validate_category(self, category: str) -> bool:
-        """Validate if a category is in the predefined list."""
         return category in CATEGORIES 

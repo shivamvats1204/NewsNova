@@ -93,26 +93,31 @@ newsnova/
 The application is configured through environment variables in `.env`:
 
 ```env
-# Database
-DATABASE_URL=sqlite:///news.db
-
-# Telegram
+# Telegram Configuration
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_CHANNEL_ID=your_channel_id
 
-# Scraping
-USER_AGENT=Mozilla/5.0 ...
-DEFAULT_SOURCES=["https://techcrunch.com/feed/", ...]
+# Database Configuration
+DATABASE_URL=sqlite:///news.db
 
-# Publishing
-DEFAULT_PUBLISHING_INTERVAL=300  # 5 minutes
-BATCH_PUBLISH_SIZE=5
-MAX_QUEUE_SIZE=1000
+# Scraping Configuration
+SCRAPING_INTERVAL=300
+MAX_ARTICLES_PER_SOURCE=10
+USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36
 
-# NLP
+# NLP Configuration
 SUMMARIZATION_MODEL=facebook/bart-large-cnn
 CLASSIFICATION_MODEL=facebook/bart-large-mnli
 MAX_SUMMARY_LENGTH=150
+
+# Logging Configuration
+LOG_LEVEL=INFO
+LOG_FILE=news_agent.log
+
+# Publishing Configuration
+DEFAULT_PUBLISHING_INTERVAL=600
+BATCH_PUBLISH_SIZE=5
+MAX_QUEUE_SIZE=100
 ```
 
 ## Usage
@@ -120,8 +125,8 @@ MAX_SUMMARY_LENGTH=150
 1. **Setup**
    ```bash
    # Clone the repository
-   git clone https://github.com/yourusername/news2.git
-   cd news2
+   git clone https://github.com/yourusername/newsnova.git
+   cd newsnova
 
    # Create virtual environment
    python -m venv venv

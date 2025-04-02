@@ -14,12 +14,9 @@ class TelegramPublisher:
         self.channel_id = TELEGRAM_CHANNEL_ID
     
     async def publish_article(self, article: Dict[str, Any]) -> bool:
-        """Publish an article to the Telegram channel."""
         try:
-            # Format the message
             message = self._format_message(article)
             
-            # Send the message
             await self.bot.send_message(
                 chat_id=self.channel_id,
                 text=message,
@@ -36,8 +33,6 @@ class TelegramPublisher:
             return False
     
     def _format_message(self, article: Dict[str, Any]) -> str:
-        """Format the article into a Telegram message."""
-        # Extract article data
         title = article.get('title', '')
         summary = article.get('summary', '')
         url = article.get('url', '')
@@ -45,7 +40,6 @@ class TelegramPublisher:
         source = article.get('source_name', '')
         author = article.get('author', '')
         
-        # Format the message
         message = f"<b>{title}</b>\n\n"
         
         if summary:
@@ -66,20 +60,16 @@ class TelegramPublisher:
         return message
     
     async def publish_media_article(self, article: Dict[str, Any]) -> bool:
-        """Publish an article with media to the Telegram channel."""
         try:
-            # Extract media URL
             media_url = article.get('image_url')
             if not media_url:
                 return await self.publish_article(article)
             
-            # Download and send media
             async with aiohttp.ClientSession() as session:
                 async with session.get(media_url) as response:
                     if response.status == 200:
                         media_data = await response.read()
                         
-                        # Send photo with caption
                         caption = self._format_message(article)
                         await self.bot.send_photo(
                             chat_id=self.channel_id,
@@ -89,7 +79,6 @@ class TelegramPublisher:
                         )
                         return True
             
-            # Fallback to text-only if media fails
             return await self.publish_article(article)
             
         except Exception as e:
@@ -97,7 +86,6 @@ class TelegramPublisher:
             return await self.publish_article(article)
     
     async def edit_message(self, message_id: int, article: Dict[str, Any]) -> bool:
-        """Edit an existing message in the channel."""
         try:
             message = self._format_message(article)
             await self.bot.edit_message_text(
@@ -112,7 +100,6 @@ class TelegramPublisher:
             return False
     
     async def delete_message(self, message_id: int) -> bool:
-        """Delete a message from the channel."""
         try:
             await self.bot.delete_message(
                 chat_id=self.channel_id,

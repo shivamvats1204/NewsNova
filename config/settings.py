@@ -1,36 +1,28 @@
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Telegram Configuration
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHANNEL_ID = os.getenv('TELEGRAM_CHANNEL_ID')
 
-# Database Configuration
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///news.db')
 
-# Scraping Configuration
 SCRAPING_INTERVAL = int(os.getenv('SCRAPING_INTERVAL', '300'))
 MAX_ARTICLES_PER_SOURCE = int(os.getenv('MAX_ARTICLES_PER_SOURCE', '10'))
 USER_AGENT = os.getenv('USER_AGENT', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
 
-# NLP Configuration
 SUMMARIZATION_MODEL = os.getenv('SUMMARIZATION_MODEL', 'facebook/bart-large-cnn')
 CLASSIFICATION_MODEL = os.getenv('CLASSIFICATION_MODEL', 'facebook/bart-large-mnli')
 MAX_SUMMARY_LENGTH = int(os.getenv('MAX_SUMMARY_LENGTH', '150'))
 
-# Logging Configuration
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
 LOG_FILE = os.getenv('LOG_FILE', 'news_agent.log')
 
-# Scheduling Configuration
 DEFAULT_PUBLISHING_INTERVAL = int(os.getenv('DEFAULT_PUBLISHING_INTERVAL', '300'))  # 5 minutes
 BATCH_PUBLISH_SIZE = int(os.getenv('BATCH_PUBLISH_SIZE', '5'))  # Publish 5 articles at once
 MAX_QUEUE_SIZE = int(os.getenv('MAX_QUEUE_SIZE', '100'))
 
-# News Categories
 CATEGORIES = [
     'politics',
     'technology',
@@ -43,7 +35,6 @@ CATEGORIES = [
     'local'
 ]
 
-# Default News Sources
 DEFAULT_SOURCES = [
     {
         'name': 'Reuters',
@@ -59,7 +50,6 @@ DEFAULT_SOURCES = [
     }
 ]
 
-# Validation
 def validate_config():
     """Validate the configuration settings."""
     if not TELEGRAM_BOT_TOKEN:

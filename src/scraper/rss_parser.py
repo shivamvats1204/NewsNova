@@ -12,10 +12,9 @@ class RSSParser:
         self.feedparser.USER_AGENT = USER_AGENT
     
     def parse_feed(self, url: str) -> List[Dict[str, Any]]:
-        """Parse an RSS feed and return a list of articles."""
         try:
             feed = self.feedparser.parse(url)
-            if feed.bozo:  # Feed parsing error
+            if feed.bozo:
                 logger.error(f"Error parsing feed {url}: {feed.bozo_exception}")
                 return []
             
@@ -31,19 +30,15 @@ class RSSParser:
             return []
     
     def _extract_article_data(self, entry: Any, source_name: str) -> Optional[Dict[str, Any]]:
-        """Extract article data from a feed entry."""
         try:
-            # Get the link
             link = entry.get('link', '')
             if not link:
                 return None
             
-            # Get the title
             title = entry.get('title', '')
             if not title:
                 return None
             
-            # Get the content
             content = ''
             if 'content' in entry:
                 content = entry.content[0].value
@@ -52,17 +47,14 @@ class RSSParser:
             elif 'summary' in entry:
                 content = entry.summary
             
-            # Get the publication date
             published = entry.get('published_parsed', None)
             if published:
                 published = datetime(*published[:6])
             else:
                 published = datetime.utcnow()
             
-            # Get the author
             author = entry.get('author', '')
             
-            # Get categories
             categories = []
             if 'tags' in entry:
                 categories = [tag.term for tag in entry.tags]
@@ -82,7 +74,6 @@ class RSSParser:
             return None
     
     def validate_feed(self, url: str) -> bool:
-        """Validate if a URL is a valid RSS feed."""
         try:
             feed = self.feedparser.parse(url)
             return not feed.bozo and len(feed.entries) > 0

@@ -6,13 +6,12 @@ from datetime import datetime
 Base = declarative_base()
 
 class Source(Base):
-    """Model for news sources."""
     __tablename__ = 'sources'
     
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     url = Column(String(500), nullable=False)
-    type = Column(String(20), nullable=False)  # 'rss' or 'web'
+    type = Column(String(20), nullable=False)
     category = Column(String(50), nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -21,7 +20,6 @@ class Source(Base):
     articles = relationship("Article", back_populates="source")
 
 class Article(Base):
-    """Model for news articles."""
     __tablename__ = 'articles'
     
     id = Column(Integer, primary_key=True)
@@ -39,21 +37,19 @@ class Article(Base):
     source = relationship("Source", back_populates="articles")
 
 class PublishingQueue(Base):
-    """Model for managing the publishing queue."""
     __tablename__ = 'publishing_queue'
     
     id = Column(Integer, primary_key=True)
     article_id = Column(Integer, ForeignKey('articles.id'), nullable=False)
-    priority = Column(Integer, default=0)  # Higher number = higher priority
+    priority = Column(Integer, default=0)
     scheduled_time = Column(DateTime)
-    status = Column(String(20), default='pending')  # pending, processing, completed, failed
+    status = Column(String(20), default='pending')
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     article = relationship("Article")
 
 def init_db(database_url):
-    """Initialize the database."""
     engine = create_engine(database_url)
     Base.metadata.create_all(engine)
     return engine 

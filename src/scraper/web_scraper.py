@@ -14,18 +14,14 @@ class WebScraper:
         self.session.headers.update({'User-Agent': USER_AGENT})
     
     def scrape_article(self, url: str) -> Optional[Dict[str, Any]]:
-        """Scrape an article from a web page."""
         try:
-            # Add random delay to be polite
             time.sleep(random.uniform(1, 3))
             
-            # Download and parse the article
             article = NewsArticle(url)
             article.download()
             article.parse()
             article.nlp()
             
-            # Extract metadata
             title = article.title
             text = article.text
             summary = article.summary
@@ -52,7 +48,6 @@ class WebScraper:
             return None
     
     def extract_links(self, url: str, max_links: int = 10) -> list:
-        """Extract article links from a webpage."""
         try:
             response = self.session.get(url)
             response.raise_for_status()
@@ -60,7 +55,6 @@ class WebScraper:
             soup = BeautifulSoup(response.text, 'html.parser')
             links = []
             
-            # Find all links
             for a in soup.find_all('a', href=True):
                 href = a.get('href')
                 if href and self._is_article_link(href):
@@ -74,8 +68,6 @@ class WebScraper:
             return []
     
     def _is_article_link(self, url: str) -> bool:
-        """Check if a URL is likely an article link."""
-        # Skip common non-article URLs
         skip_patterns = [
             '/category/', '/tag/', '/author/', '/about/', '/contact/',
             '/privacy/', '/terms/', '/subscribe/', '/login/', '/register/'
@@ -84,7 +76,6 @@ class WebScraper:
         if any(pattern in url.lower() for pattern in skip_patterns):
             return False
         
-        # Check for common article patterns
         article_patterns = [
             '/article/', '/news/', '/story/', '/post/', '/blog/',
             '/202', '/2023/', '/2024/'
@@ -93,21 +84,17 @@ class WebScraper:
         return any(pattern in url.lower() for pattern in article_patterns)
     
     def validate_url(self, url: str) -> bool:
-        """Validate if a URL is accessible and contains article content."""
         try:
             response = self.session.get(url, timeout=10)
             response.raise_for_status()
             
-            # Check content type
             content_type = response.headers.get('content-type', '').lower()
             if 'text/html' not in content_type:
                 return False
             
-            # Check if page has article-like content
             soup = BeautifulSoup(response.text, 'html.parser')
             text_content = soup.get_text()
             
-            # Basic checks for article content
             has_title = bool(soup.find('h1'))
             has_paragraphs = len(soup.find_all('p')) > 3
             has_sufficient_text = len(text_content.split()) > 100

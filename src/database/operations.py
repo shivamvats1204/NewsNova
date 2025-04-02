@@ -11,7 +11,6 @@ class DatabaseOperations:
         self.Session = sessionmaker(bind=engine)
     
     def add_source(self, source_data: Dict[str, Any]) -> Optional[Source]:
-        """Add a new news source."""
         session = self.Session()
         try:
             source = Source(**source_data)
@@ -26,7 +25,6 @@ class DatabaseOperations:
             session.close()
     
     def get_sources(self, active_only: bool = True) -> List[Source]:
-        """Get all news sources."""
         session = self.Session()
         try:
             query = session.query(Source)
@@ -37,7 +35,6 @@ class DatabaseOperations:
             session.close()
     
     def add_article(self, article_data: Dict[str, Any]) -> Optional[Article]:
-        """Add a new article."""
         session = self.Session()
         try:
             article = Article(**article_data)
@@ -52,7 +49,6 @@ class DatabaseOperations:
             session.close()
     
     def get_article_by_url(self, url: str) -> Optional[Article]:
-        """Get an article by its URL."""
         session = self.Session()
         try:
             return session.query(Article).filter(Article.url == url).first()
@@ -60,7 +56,6 @@ class DatabaseOperations:
             session.close()
     
     def get_unpublished_articles(self, limit: int = 10) -> List[Article]:
-        """Get articles that haven't been published yet."""
         session = self.Session()
         try:
             return session.query(Article)\
@@ -72,7 +67,6 @@ class DatabaseOperations:
             session.close()
     
     def mark_article_as_published(self, article_id: int) -> bool:
-        """Mark an article as published."""
         session = self.Session()
         try:
             article = session.query(Article).filter(Article.id == article_id).first()
@@ -91,7 +85,6 @@ class DatabaseOperations:
     
     def add_to_publishing_queue(self, article_id: int, priority: int = 0, 
                               scheduled_time: Optional[datetime] = None) -> Optional[PublishingQueue]:
-        """Add an article to the publishing queue."""
         session = self.Session()
         try:
             queue_item = PublishingQueue(
@@ -110,7 +103,6 @@ class DatabaseOperations:
             session.close()
     
     def get_next_queued_article(self) -> Optional[PublishingQueue]:
-        """Get the next article from the publishing queue."""
         session = self.Session()
         try:
             return session.query(PublishingQueue)\
@@ -121,7 +113,6 @@ class DatabaseOperations:
             session.close()
     
     def update_queue_item_status(self, queue_id: int, status: str) -> bool:
-        """Update the status of a queue item."""
         session = self.Session()
         try:
             queue_item = session.query(PublishingQueue).filter(PublishingQueue.id == queue_id).first()
